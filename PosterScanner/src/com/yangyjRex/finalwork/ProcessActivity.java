@@ -11,14 +11,18 @@ import java.io.OutputStream;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
+import java.util.regex.Matcher;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.CvType;
+import org.opencv.core.DMatch;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
+import org.opencv.core.MatOfDMatch;
 import org.opencv.core.MatOfFloat;
 import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
@@ -27,6 +31,8 @@ import org.opencv.core.Point;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.video.Video;
+
+import com.yangyjRex.finalwork.stitcher.SIFTExtractor;
 
 import android.R.integer;
 import android.animation.Keyframe;
@@ -61,6 +67,7 @@ public class ProcessActivity extends Activity {
 	private Mat image_gray;
 	java.util.List<Mat> histList = new LinkedList<Mat>();
 	ArrayList<Integer> keyFrame = new ArrayList<Integer>();
+	java.util.List<Bitmap> mat4sift = new LinkedList<Bitmap>();
 	
 	
     private static  Context context ;
@@ -124,12 +131,6 @@ public class ProcessActivity extends Activity {
 
 	
 
-	
-
-
-
-	
-
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -164,6 +165,13 @@ public class ProcessActivity extends Activity {
 	
 	public void optFlow(View v){
 		extractFramesByOptFlow(videoFilePath);
+		
+//		MatOfDMatch siftMatcher = SIFTExtractor.matchSIFT(mat4sift.get(0), mat4sift.get(1));
+//		List<DMatch> dmatch = siftMatcher.toList();
+//		for(int i=0; i<dmatch.size();i++){
+//			Log.d("Tag", "!!!!!!!--------"+i+"  :  "+dmatch.get(i).toString());
+//		}
+	
 	}
 	
 	private void extractFramesByOptFlow(String filePath) {
@@ -249,6 +257,7 @@ public class ProcessActivity extends Activity {
 	    	if(keyFrame.contains(keyFrameNum)){
 	    		frame = retriever.getFrameAtTime(time,MediaMetadataRetriever.OPTION_CLOSEST);
 	    		saveImage(frame,(int)time);
+	    		mat4sift.add(frame);
 	    		frame.recycle();
 	    		frame = null;
 	    		System.gc();
