@@ -1,4 +1,4 @@
-package com.yangyjRex.finalwork;
+package org.opencv.samples.tutorial3;
 
 
 import java.io.File;
@@ -7,6 +7,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.yangyjRex.finalwork.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -186,7 +188,7 @@ public class VideoCaptureActivity extends Activity implements SurfaceHolder.Call
 			saveImageToGallery(mContext, mMediaFile);///////保存到系统相册
 			
 			//pass the path of video to next activity
-			Intent intent = new Intent(this, ProcessActivity.class);
+			Intent intent = new Intent(this, Sample3Native.class);
 			intent.putExtra("videoDir", mMediaFile.getPath());
 			startActivity(intent);
 			

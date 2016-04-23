@@ -1,4 +1,6 @@
-package com.yangyjRex.finalwork;
+package org.opencv.samples.tutorial3;
+
+import com.yangyjRex.finalwork.R;
 
 import android.app.Activity;
 import android.content.Intent;

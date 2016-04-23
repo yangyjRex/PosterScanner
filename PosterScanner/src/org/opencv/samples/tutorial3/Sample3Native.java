@@ -1,4 +1,4 @@
-package com.yangyjRex.finalwork;
+package org.opencv.samples.tutorial3;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,6 +18,7 @@ import java.util.regex.Matcher;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.DMatch;
 import org.opencv.core.Mat;
@@ -28,10 +29,13 @@ import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
+import org.opencv.core.Scalar;
 import org.opencv.core.Size;
+import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.video.Video;
 
+import com.yangyjRex.finalwork.R;
 import com.yangyjRex.finalwork.stitcher.SIFTExtractor;
 
 import android.R.integer;
@@ -55,7 +59,7 @@ import android.widget.MediaController;
 import android.widget.VideoView;
 
 
-public class ProcessActivity extends Activity {
+public class Sample3Native extends Activity {
 
 	
 	
@@ -67,7 +71,15 @@ public class ProcessActivity extends Activity {
 	private Mat image_gray;
 	java.util.List<Mat> histList = new LinkedList<Mat>();
 	ArrayList<Integer> keyFrame = new ArrayList<Integer>();
-	java.util.List<Bitmap> mat4sift = new LinkedList<Bitmap>();
+	java.util.List<Bitmap> images_to_be_stitched = new LinkedList<Bitmap>();
+	java.util.List<Mat> mats_to_be_stitched = new LinkedList<Mat>();
+	java.util.List<String> matsPath_to_be_stitched = new LinkedList<String>();
+	private Mat panorama = null;
+	private Bitmap temp = null;
+	
+	private static final String mImageName = "im";
+	private static final String mImageExt = ".jpeg";
+	private static final File tempImageDir = new File(Environment.getExternalStorageDirectory() + File.separator + "panoTmpImage");
 	
 	
     private static  Context context ;
@@ -92,6 +104,7 @@ public class ProcessActivity extends Activity {
         }  
     }; 
  //////////////////////////////////////////////////////////////////////////////////////////   
+	
     
     
     
@@ -107,7 +120,7 @@ public class ProcessActivity extends Activity {
 		
 		final Intent intent = getIntent();
 		videoFilePath = intent.getStringExtra("videoDir");
-		context =ProcessActivity.this;
+		context =Sample3Native.this;
 		video1=(VideoView)findViewById(R.id.videoView);  
         mediaco=new MediaController(this);  
         File file=new File(videoFilePath);  
@@ -165,6 +178,8 @@ public class ProcessActivity extends Activity {
 	
 	public void optFlow(View v){
 		extractFramesByOptFlow(videoFilePath);
+		Log.d("optFlow", "extractFramesByOptFlow done!!!!------");
+		stitchImages();
 		
 //		MatOfDMatch siftMatcher = SIFTExtractor.matchSIFT(mat4sift.get(0), mat4sift.get(1));
 //		List<DMatch> dmatch = siftMatcher.toList();
@@ -256,8 +271,10 @@ public class ProcessActivity extends Activity {
 	    	
 	    	if(keyFrame.contains(keyFrameNum)){
 	    		frame = retriever.getFrameAtTime(time,MediaMetadataRetriever.OPTION_CLOSEST);
+	    		
 	    		saveImage(frame,(int)time);
-	    		mat4sift.add(frame);
+//	    		images_to_be_stitched.add(frame);
+	    		
 	    		frame.recycle();
 	    		frame = null;
 	    		System.gc();
@@ -414,6 +431,8 @@ public class ProcessActivity extends Activity {
 			if(keyFrame.contains(keyFrameNum)){
 				bitmap = retriever.getFrameAtTime(time,MediaMetadataRetriever.OPTION_PREVIOUS_SYNC);
 				saveImage(bitmap,(int)time);
+				
+				
 			}
 			
 			keyFrameNum++;
@@ -425,9 +444,30 @@ public class ProcessActivity extends Activity {
 
 	
 
-
+	private void saveImage(Mat mat,int time) {
+		// TODO 自动生成的方法存根
+		File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+	    		Environment.DIRECTORY_PICTURES), "Frames");
+	    
+	    if (! mediaStorageDir.exists()){
+	        if (! mediaStorageDir.mkdirs()){
+	            Log.d("MyCameraApp", "failed to create directory");
+	           
+	        }
+	    }
+	     File mediaFile;
+		 mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+			        "IMG_"+ (int)time + ".jpg");
+	 
+		
+		    Imgcodecs.imwrite(mediaFile.getPath(), mat);
+	    
+	    context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(mediaFile)));
+	
+   }
 
 	private void saveImage(Bitmap bitmap,int time) {
+
 		// TODO 自动生成的方法存根
 		File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
 	    		Environment.DIRECTORY_PICTURES), "Frames");
@@ -455,11 +495,81 @@ public class ProcessActivity extends Activity {
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();
 		}
-		     
+		  
+		matsPath_to_be_stitched.add(mediaFile.getPath());
 	    
 	    context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(mediaFile)));
 	
    }
+	
+	
+	public void stitchImages() {
+		if(!matsPath_to_be_stitched.isEmpty())
+		{
+			Log.d("stitchImages", "Into   stitchImages!!!!----size = "+matsPath_to_be_stitched.size());
+			
+			for(int j=0;j<matsPath_to_be_stitched.size();j++){
+				Mat temp = Imgcodecs.imread(matsPath_to_be_stitched.get(j));
+				Core.flip(temp, temp,1 );
+				mats_to_be_stitched.add(temp);
+				writeImage(temp, j);
+				
+				
+			}
+		Log.i("stitchImages", "create mat done!");
+		
+//		panorama = mats_to_be_stitched.get(0).clone();
+//		Imgproc.cvtColor(panorama, panorama, Imgproc.COLOR_BGR2RGB,3);		
+		panorama = new Mat(mats_to_be_stitched.get(1).rows(), mats_to_be_stitched.get(1).cols(), CvType.CV_8UC3);
+//		Imgproc.cvtColor(panorama, panorama, Imgproc.COLOR_BGR2RGB,3);
+		System.loadLibrary("native_sample");
+		
+		FindFeatures(mats_to_be_stitched.get(0).getNativeObjAddr(),
+					mats_to_be_stitched.get(0).getNativeObjAddr(),
+					panorama.getNativeObjAddr(), mats_to_be_stitched.size());
+		
+
+			
+		Log.i("stitchImages", "Done stitching. Writing panarama");
+
+		
+		
+			saveImage(panorama,999);
+			
+//		Log.i("stitchImages", "deleting temp files");
+		
+//			deleteTmpIm();
+		}
+		new  AlertDialog.Builder(this).setTitle("Tips").setMessage("已完成！！！").show();
+		
+	}
+	
+	private void deleteTmpIm()
+    {
+		File curFile;
+		for (int j = 0; j < mats_to_be_stitched.size(); j++) {
+			curFile = new File(getFullFileName(j));
+			curFile.delete();
+		}
+		mats_to_be_stitched.clear();
+    }
+	
+	private String getFullFileName( int num)
+	{
+		return mImageName + num + mImageExt;
+	}
+
+	private void writeImage(Mat image, int imNum)
+	{
+		writeImage(image, getFullFileName(imNum));
+	}
+
+	private void writeImage(Mat image, String fileName) {
+		File createDir = tempImageDir;
+		if(!createDir.exists())
+			createDir.mkdir();
+		Imgcodecs.imwrite(tempImageDir+File.separator + fileName, image);
+	}
 	
 	
 	protected void onResume() {  
@@ -474,6 +584,9 @@ public class ProcessActivity extends Activity {
 	    else{
 	    	Log.e("TAG", "Succeed to connect to OpenCV Manager");
 	    }
+	    
+//	    System.loadLibrary("native_sample");
+
 //      new Handler().postDelayed(new Runnable(){  
 //  
 //          @Override  
@@ -485,4 +598,10 @@ public class ProcessActivity extends Activity {
 //      }, 1000);  
           
     }
+	
+
+
+	public native void FindFeatures(long image1, long image2, long image3,
+			int count);
+
 }

@@ -27,7 +27,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name="org.opencv.samples.tutorial3.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,23 +36,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CameraActivity"
+            android:name="org.opencv.samples.tutorial3.CameraActivity"
             android:label="@string/title_activity_camera"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name=".LabActivity"
+            android:name="org.opencv.samples.tutorial3.LabActivity"
             android:label="@string/title_activity_lab"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name=".VideoCaptureActivity"
+            android:name="org.opencv.samples.tutorial3.VideoCaptureActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_video_capture"
             android:theme="@style/FullscreenTheme" >
         </activity>
         <activity
-            android:name=".ProcessActivity"
+            android:name="org.opencv.samples.tutorial3.Sample3Native"
             android:label="@string/title_activity_process" >
         </activity>
     </application>
