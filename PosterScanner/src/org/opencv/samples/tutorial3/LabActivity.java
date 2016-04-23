@@ -1,5 +1,7 @@
 package org.opencv.samples.tutorial3;
 
+import java.io.File;
+
 import com.yangyjRex.finalwork.R;
 
 import android.app.Activity;
@@ -26,8 +28,10 @@ public class LabActivity extends Activity {
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		final Intent intent = getIntent();
-		mUri = intent.getParcelableExtra(EXTRA_PHOTO_URI);
-		mDataPath = intent.getStringExtra(EXTRA_PHOTO_DATA_PATH);
+		
+		mDataPath = intent.getStringExtra("path");
+		File imageFile = new File(mDataPath);
+		mUri = Uri.fromFile(imageFile);
 		final ImageView imageView = new ImageView(this);
 		imageView.setImageURI(mUri);
 		setContentView(imageView);

@@ -444,7 +444,7 @@ public class Sample3Native extends Activity {
 
 	
 
-	private void saveImage(Mat mat,int time) {
+	private String saveImage(Mat mat,int time) {
 		// TODO 自动生成的方法存根
 		File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
 	    		Environment.DIRECTORY_PICTURES), "Frames");
@@ -463,7 +463,7 @@ public class Sample3Native extends Activity {
 		    Imgcodecs.imwrite(mediaFile.getPath(), mat);
 	    
 	    context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(mediaFile)));
-	
+	    return mediaFile.getAbsolutePath();
    }
 
 	private void saveImage(Bitmap bitmap,int time) {
@@ -534,13 +534,15 @@ public class Sample3Native extends Activity {
 
 		
 		
-			saveImage(panorama,999);
+		String imagePath =saveImage(panorama,999);
 			
-//		Log.i("stitchImages", "deleting temp files");
+        new  AlertDialog.Builder(this).setTitle("Tips").setMessage("已完成！！！").show();
 		
-//			deleteTmpIm();
+		Intent intent = new Intent(this, LabActivity.class);
+		intent.putExtra("path", imagePath);
+		startActivity(intent);
 		}
-		new  AlertDialog.Builder(this).setTitle("Tips").setMessage("已完成！！！").show();
+		
 		
 	}
 	
