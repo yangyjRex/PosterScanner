@@ -56,6 +56,9 @@ public class LabActivity extends Activity {
 			case R.id.menu_share:
 				sharePhoto();
 				return true;
+			case R.id.menu_home:
+				toHome();
+				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
@@ -63,6 +66,13 @@ public class LabActivity extends Activity {
 	
 	
 	
+	private void toHome() {
+		// TODO 自动生成的方法存根
+		Intent intent = new Intent(this, MainActivity.class);
+		startActivity(intent);
+	}
+
+
 	/*
 	* Show a confirmation dialog. On confirmation, the photo is
 	* deleted and the activity finishes.

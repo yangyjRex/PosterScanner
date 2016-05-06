@@ -281,7 +281,7 @@ public class Sample3Native extends Activity {
 	    	}
 	    	keyFrameNum++;
 	    }
-	    new  AlertDialog.Builder(this).setTitle("Tips").setMessage("已完成！！！").show();
+//	    new  AlertDialog.Builder(this).setTitle("Tips").setMessage("已完成！！！").show();
 	}
 
 	/*
@@ -532,11 +532,11 @@ public class Sample3Native extends Activity {
 			
 		Log.i("stitchImages", "Done stitching. Writing panarama");
 
-		
+		Core.flip(panorama, panorama,1 );
 		
 		String imagePath =saveImage(panorama,999);
 			
-        new  AlertDialog.Builder(this).setTitle("Tips").setMessage("已完成！！！").show();
+//        new  AlertDialog.Builder(this).setTitle("Tips").setMessage("已完成！！！").show();
 		
 		Intent intent = new Intent(this, LabActivity.class);
 		intent.putExtra("path", imagePath);

@@ -19,5 +19,12 @@
 	android:orderInCategory="100"
 	android:showAsAction="ifRoom|withText"
 	android:title="@string/share" />
+	
+	<item
+	android:id="@+id/menu_home"
+	android:orderInCategory="100"
+	android:showAsAction="ifRoom|withText"
+	android:title="Home" />
+	
 
 </menu>

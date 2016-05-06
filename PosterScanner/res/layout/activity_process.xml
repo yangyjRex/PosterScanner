@@ -10,13 +10,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="org.opencv.samples.tutorial3.Sample3Native" >
 
-    <Button
-        android:id="@+id/btn_process"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:onClick="startProcess"
-        android:text="histogram" />
-
     <View
         android:id="@+id/view1"
         android:layout_width="wrap_content"

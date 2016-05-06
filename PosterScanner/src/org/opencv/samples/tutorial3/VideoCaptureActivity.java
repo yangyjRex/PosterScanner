@@ -266,7 +266,7 @@ public class VideoCaptureActivity extends Activity implements SurfaceHolder.Call
 		 * @param context */
 		private static File getOutputMediaFile(int type){
 		    File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-		    		Environment.DIRECTORY_PICTURES), "MyCameraApp");
+		    		Environment.DIRECTORY_PICTURES), "capture");
 		    
 		    if (! mediaStorageDir.exists()){
 		        if (! mediaStorageDir.mkdirs()){

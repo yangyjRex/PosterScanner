@@ -15,23 +15,14 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="25dp"
-        android:text="Copyright: YangyjRex" />
-
-    <Button
-        android:id="@+id/btn_manage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/btn_capture"
-        android:layout_centerVertical="true"
-        android:onClick="manage"
-        android:text="管理" />
+        android:text="Copyright@ NJUPT" />
 
     <Button
         android:id="@+id/btn_capture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_manage"
         android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:layout_marginBottom="60dp"
         android:onClick="capture"
         android:text="拍摄" />
