@@ -9,7 +9,9 @@ import java.io.OutputStream;
 
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
@@ -447,7 +449,7 @@ public class Sample3Native extends Activity {
 	private String saveImage(Mat mat,int time) {
 		// TODO 自动生成的方法存根
 		File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-	    		Environment.DIRECTORY_PICTURES), "Frames");
+	    		Environment.DIRECTORY_PICTURES), "result");
 	    
 	    if (! mediaStorageDir.exists()){
 	        if (! mediaStorageDir.mkdirs()){
@@ -456,7 +458,8 @@ public class Sample3Native extends Activity {
 	        }
 	    }
 	     File mediaFile;
-		 mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+	     String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+		 mediaFile = new File(mediaStorageDir.getPath() + File.separator + timeStamp +
 			        "IMG_"+ (int)time + ".jpg");
 	 
 		
@@ -470,7 +473,7 @@ public class Sample3Native extends Activity {
 
 		// TODO 自动生成的方法存根
 		File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-	    		Environment.DIRECTORY_PICTURES), "Frames");
+	    		Environment.DIRECTORY_PICTURES), "keyFrames");
 	    
 	    if (! mediaStorageDir.exists()){
 	        if (! mediaStorageDir.mkdirs()){
@@ -479,7 +482,8 @@ public class Sample3Native extends Activity {
 	        }
 	    }
 	     File mediaFile;
-		 mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+	     String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+		 mediaFile = new File(mediaStorageDir.getPath() + File.separator + timeStamp +
 			        "IMG_"+ (int)time + ".jpg");
 	 
 		//写入mediaFile  
